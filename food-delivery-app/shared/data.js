@@ -130,14 +130,13 @@
       var st = store(perTab);
       var raw = st ? st.getItem("fd:" + key) : null;
       if (raw !== null) { return JSON.parse(raw); }
-    } catch (e) {   }
+    } catch (e) {  }
     return Object.prototype.hasOwnProperty.call(memory, key) ? memory[key] : dflt;
   }
   function write(key, val, perTab) {
     memory[key] = val;
-    try { var st = store(perTab); if (st) { st.setItem("fd:" + key, JSON.stringify(val)); } } catch (e) {   }
+    try { var st = store(perTab); if (st) { st.setItem("fd:" + key, JSON.stringify(val)); } } catch (e) {  }
   }
-
   function resetState() {
     memory = {};
     [true, false].forEach(function (perTab) {
@@ -146,7 +145,7 @@
         if (!st) { return; }
         Object.keys(st).filter(function (k) { return k.indexOf("fd:") === 0; })
           .forEach(function (k) { st.removeItem(k); });
-      } catch (e) {   }
+      } catch (e) {  }
     });
   }
 

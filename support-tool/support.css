@@ -1,0 +1,18 @@
+.sp-strip { display: flex; gap: 18px; margin-bottom: 8px; padding: 5px 8px; background: var(--fd-white); border: 1px solid var(--fd-hair); }
+.sp-strip b { font-variant-numeric: tabular-nums; }
+.sp-detail { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 10px; align-items: start; }
+.sp-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.sp-head h1 { margin: 0; font-size: 15px; }
+.sp-actions { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+.sp-thread { display: flex; flex-direction: column; gap: 6px; max-height: 330px; overflow: auto; margin-bottom: 8px; }
+.sp-msg { padding: 6px 8px; border: 1px solid var(--fd-hair); border-radius: 3px; background: var(--fd-white); max-width: 88%; }
+.sp-msg.is-agent { align-self: flex-end; background: var(--fd-bg); }
+.sp-msg.is-system { align-self: center; max-width: 100%; border: 0; background: none; color: var(--fd-grey); font-size: 11px; padding: 0; }
+.sp-msg-meta { color: var(--fd-grey); font-size: 11px; margin-bottom: 2px; }
+.sp-reply textarea { min-height: 70px; }
+.sp-catpanel { margin-bottom: 8px; padding: 8px; border: 1px solid #C9CDD4; border-radius: 3px; background: var(--fd-white); display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 12px; }
+.sp-catpanel label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.sp-catpanel .sp-catfoot { grid-column: 1 / -1; display: flex; gap: 6px; margin-top: 4px; }
+.sp-side .in-panel { min-height: 260px; }
+.sp-csat-big { font-size: 28px; font-weight: 700; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+.sp-amount { width: 120px; }

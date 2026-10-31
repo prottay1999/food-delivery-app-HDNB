@@ -1,0 +1,1 @@
+window.FD_DATA.register("meta",{"now":"2027-03-31 13:10:00","promo_codes":[{"code":"FIRSTFREE","free_delivery":true,"rule":"First order"},{"code":"FREEDEL500","free_delivery":true,"rule":"Food value Tk 500 or more"}],"files":["promo_codes"]});

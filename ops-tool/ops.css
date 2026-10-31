@@ -1,0 +1,10 @@
+.ops-order-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ops-order-head h1 { margin: 0; font-size: 15px; }
+.ops-detail { display: block; max-width: 760px; }
+.ops-assign-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+.ops-assign-row .in-select { width: 360px; }
+.ops-eta { display: flex; gap: 6px; align-items: center; margin-top: 10px; }
+.ops-eta .in-input { width: 70px; }
+.ops-recon-input { width: 78px; text-align: right; }
+.ops-subtle-tab { color: var(--fd-grey-light); padding: 8px 12px; font-weight: 600; cursor: not-allowed; }
+.ops-strip { display: flex; gap: 14px; color: var(--fd-grey); margin-bottom: 6px; }

@@ -112,7 +112,6 @@ window.BX_BN = {
   "Popular searches": "জনপ্রিয় সার্চ",
   "Preparing your order": "আপনার অর্ডার তৈরি হচ্ছে",
   "Promo code": "প্রোমো কোড",
-  "Prototype: type any 6 digits.": "প্রোটোটাইপ: যেকোনো ৬টি সংখ্যা দিন।",
   "Quantity": "পরিমাণ",
   "Rate": "রেটিং দিন",
   "Rate your order": "আপনার অর্ডারে রেটিং দিন",

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing CMS</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="shared/app.css">
+<link rel="stylesheet" href="marketing.css">
+</head>
+<body class="tool-strip-on">
+<div class="tool-strip"><button type="button" class="tool-reset" data-testid="reset-data" onclick="if(confirm('Reset all saved data?')){try{FD_DATA.resetState()}catch(e){}location.reload()}">Reset data</button></div>
+<div id="app-root" data-testid="marketing-app"></div>
+
+<script src="shared/data.js"></script>
+<script src="shared/common.js"></script>
+<script src="marketing.js"></script>
+</body>
+</html>

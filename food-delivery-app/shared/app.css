@@ -59,7 +59,6 @@
   --fd-white: #FFFFFF;
   --fd-radius: 10px;
   --fd-radius-sm: 6px;
-
   --fd-status-placed: #B45309;
   --fd-status-accepted: #0E7A6E;
   --fd-status-transit: #1D4ED8;
@@ -311,7 +310,6 @@ td.fd-money, th.fd-money { text-align: right; }
   overflow: hidden;
   transform-origin: center center;
 }
-
 @media (max-height: 900px) { .fd-phone { transform: scale(.92); } }
 @media (max-height: 820px) { .fd-phone { transform: scale(.86); } }
 @media (max-height: 760px) { .fd-phone { transform: scale(.80); } }
@@ -344,3 +342,18 @@ td.fd-money, th.fd-money { text-align: right; }
 .fd-gap-12 { gap: 12px; }
 .fd-gap-16 { gap: 16px; }
 
+:root { --ws-strip: 0px; }
+body.ws-strip-on { --ws-strip: 32px; }
+.ws-strip { flex: none; height: 32px; display: flex; align-items: center; gap: 14px; padding: 0 14px; background: #E4E6EA; color: var(--fd-grey); font-size: 12px; border-bottom: 1px solid #CDD0D6; white-space: nowrap; overflow: hidden; }
+.ws-back { display: inline-flex; align-items: center; gap: 4px; color: var(--fd-ink); font-weight: 600; font-size: 12px; text-decoration: none; padding: 3px 8px 3px 4px; border: 1px solid #CDD0D6; border-radius: 4px; background: #fff; }
+.ws-back:hover { border-color: var(--fd-grey-light); text-decoration: none; }
+.ws-back svg { width: 14px; height: 14px; flex: none; }
+.ws-panel-link { margin: 0 0 14px; }
+body.ws-strip-narrow .ws-strip { display: none; }
+@media (max-width: 760px) {
+  body.ws-strip-narrow { --ws-strip: 32px; }
+  body.ws-strip-narrow .ws-strip { display: flex; }
+}
+@media (max-width: 520px) { .ws-note { display: none; } }
+
+.ws-reset { margin-left: auto; cursor: pointer; padding: 3px 8px; font-family: inherit; }

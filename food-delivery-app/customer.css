@@ -35,7 +35,8 @@
 .bx-proto ul { margin: 0; padding-left: 18px; }
 .bx-proto li { margin-bottom: 4px; }
 @media (max-width: 760px) { .bx-proto { display: none; } }
-.bx-proto .ws-panel-link { margin: 0 0 14px; }
+
+.bx-proto { align-self: flex-start; padding-top: 24px; }
 
 .bx-app {
   position: absolute;
@@ -433,6 +434,8 @@ select.bx-input { appearance: auto; }
 
 .bx-photo { width: 100%; height: 100%; }
 .bx-photo svg { display: block; width: 100%; height: 100%; }
+.bx-img { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--fd-bg); }
+.bx-cover { overflow: hidden; }
 
 .bx-sheet.bx-sheet-item { display: flex; flex-direction: column; overflow: hidden; max-height: 62%; }
 .bx-sheet-in { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }

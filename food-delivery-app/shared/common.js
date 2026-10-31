@@ -10,7 +10,6 @@
     delivered: "Delivered",
     cancelled: "Cancelled"
   };
-
   var STATUS_TO_PILL = {
     placed: "placed",
     accepted: "accepted",
@@ -95,7 +94,6 @@
     svg.setAttribute("class", cls || "fd-icon");
     svg.setAttribute("aria-hidden", "true");
     var use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-
     use.setAttribute("href", SPRITE_URL + "#icon-" + name);
     svg.appendChild(use);
     return svg;

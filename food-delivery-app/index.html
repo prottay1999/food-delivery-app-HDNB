@@ -17,18 +17,17 @@
       </div>
     </div>
   </div>
-  <aside class="bx-proto" id="bx-proto" aria-label="Prototype controls">
+  <aside class="bx-proto" id="bx-proto" aria-label="Controls">
     <h2>Controls</h2>
     <p>These help you walk through the app.</p>
     <button type="button" class="fd-btn" id="bx-proto-advance" data-testid="customer-proto-advance">Move the latest order to the next status</button>
-    <button type="button" class="fd-btn" id="bx-proto-reset" data-testid="customer-proto-reset">Reset prototype data</button>
+    <button type="button" class="fd-btn" id="bx-proto-reset" data-testid="customer-proto-reset">Reset data</button>
+    <button type="button" class="fd-btn" data-testid="proto-login-returning" onclick="window.FD_LOGIN_RETURNING && window.FD_LOGIN_RETURNING()">Log in as returning customer</button>
     <h3>Test logins</h3>
     <ul>
       <li>OTP: any 6 digits work.</li>
       <li>Returning customer: 01712 345678. Has past orders.</li>
-      <li>Any other number opens a new account with no orders.</li>
-      <li>One cancelled order, no completed one: 01712 000002.</li>
-      <li>Staff account: 01999 000001.</li>
+      <li>Any other number opens a new account.</li>
     </ul>
   </aside>
 </main>

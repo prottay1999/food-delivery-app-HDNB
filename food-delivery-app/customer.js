@@ -154,7 +154,10 @@
     if (r.photoPct !== null && r.photoPct !== undefined) { return r.photoPct; }
     return (r.type === "restaurant" && r.orders >= 2) ? 90 : 14;
   }
-  function hasPhoto(r, item) { return mod("photo|" + r.id + "|" + item.name, 100) < photoPct(r); }
+  function hasPhoto(r, item) {
+    if (item.fromData) { return item.hasPhoto === true; }
+    return mod("photo|" + r.id + "|" + item.name, 100) < photoPct(r);
+  }
 
   function minOrderOf(r) {
     if (!r) { return 0; }
@@ -240,12 +243,10 @@
       rows.push({ id: "g" + r.id + "-" + (n++), name: name, name_bn: "", category: categoryOf(name), price: Math.round(price * scale / 5) * 5, restaurant_id: r.id });
     }
     pool.forEach(function (p) { push(p[0], p[1]); });
-
     pool.slice(0, 20).forEach(function (p) { if (categoryOf(p[0]) === "Mains") { push(p[0] + " Combo", p[1] + 90); } });
     pool.slice(0, 20).forEach(function (p) { if (categoryOf(p[0]) === "Mains") { push(p[0] + " Family Pack", p[1] * 2 + 60); } });
     return rows;
   }
-
   function shuffled(r, rows) {
     var key = {};
     rows.forEach(function (m) { key[m.name] = hash("ord|" + r.id + "|" + m.name); });
@@ -258,18 +259,19 @@
     var rows = S.menuRows.filter(function (m) { return String(first(m.restaurant_id)) === String(r.id); }).map(function (m) {
       return {
         id: first(m.item_id, m.id), name: m.name || "Item", name_bn: m.name_bn || "",
-        category: m.category ? titleCase(m.category) : "Menu", price: num(first(m.price, m.price_tk)) || 0, restaurant_id: r.id
+        category: m.category ? titleCase(m.category) : "Menu", price: num(first(m.price, m.price_tk)) || 0, restaurant_id: r.id,
+        fromData: true, hasPhoto: m.has_photo === true
       };
     });
     if (!rows.length) { rows = templateFor(r); }
-
     var out = [];
     rows.forEach(function (m) {
       var mm = /^(.*)\s\((half|full)\)$/i.exec(m.name);
       if (!mm) { out.push(m); return; }
       var base = mm[1], kind = mm[2].toLowerCase();
       var host = out.filter(function (x) { return x.pair === base; })[0];
-      if (!host) { host = { id: m.id, name: base, name_bn: m.name_bn, category: m.category, price: m.price, restaurant_id: r.id, pair: base }; out.push(host); }
+      if (!host) { host = { id: m.id, name: base, name_bn: m.name_bn, category: m.category, price: m.price, restaurant_id: r.id, pair: base, fromData: m.fromData, hasPhoto: m.hasPhoto }; out.push(host); }
+      else if (m.hasPhoto) { host.hasPhoto = true; }
       if (kind === "full") { host.price = m.price; host.id = m.id; } else { host.halfPrice = m.price; }
     });
     out = extendMenu(r, out);
@@ -327,7 +329,6 @@
     var sub = num(first(o.items_total_tk, o.item_total));
     if (!items.length && sub) {
       var m = r.id !== undefined ? menuFor(r)[0] : null;
-
       items = [{ name: m ? m.name : "Food order", qty: 1, price: sub, opts: "", id: m ? m.id : null, base: null, optList: null, assumed: true }];
     }
     if (sub === null) { sub = items.reduce(function (s, i) { return s + i.qty * i.price; }, 0); }
@@ -345,7 +346,6 @@
       mine: !!o.customer_phone
     };
   }
-
   function cancelledOrderFor(acc) {
     var live = S.restaurants.filter(function (r) { return r.live && r.type === "restaurant"; });
     var r = live[0] || S.restaurants[0];
@@ -396,7 +396,6 @@
   function cartCount() { return cart().lines.reduce(function (s, l) { return s + l.qty; }, 0); }
   function cartSubtotal() { return cart().lines.reduce(function (s, l) { return s + lineUnit(l) * l.qty; }, 0); }
   function cartRestaurant() { var c = cart(); return c.restaurant_id != null ? S.byId[c.restaurant_id] : null; }
-
   function addToCart(r, item, opts, qty) {
     var c = cart();
     if (c.restaurant_id === null || String(c.restaurant_id) !== String(r.id)) { c = { restaurant_id: r.id, lines: [] }; }
@@ -459,9 +458,7 @@
     if (hit && num(hit.discount_amount)) { return { ok: true, code: code, discount: num(hit.discount_amount) }; }
     return { ok: false, err: t("This code is not valid.") };
   }
-
   function basketFree() { return isFirstOrder() || cartSubtotal() >= FREE_DELIVERY_MIN; }
-
   function pricing() {
     var sub = cartSubtotal();
     var isFirst = isFirstOrder();
@@ -561,7 +558,7 @@
 
   var TAB_SCREENS = { home: "home", search: "search", orders: "orders", account: "account" };
   function cleanup() {
-    S.cleanups.forEach(function (fn) { try { fn(); } catch (e) {   } });
+    S.cleanups.forEach(function (fn) { try { fn(); } catch (e) {  } });
     S.cleanups = [];
     S.onCart = null;
   }
@@ -605,7 +602,6 @@
     if (r.rating === null) { return null; }
     return el("span", { class: "bx-rating" }, [ic("star", "bx-ic-xs"), String(r.rating.toFixed ? r.rating.toFixed(1) : r.rating)]);
   }
-
   var FOOD_COLOURS = [["#C2410C", "#F59E0B", "#7C2D12"], ["#B45309", "#FCD34D", "#78350F"], ["#9A3412", "#FDBA74", "#431407"], ["#A16207", "#FDE68A", "#713F12"], ["#B91C1C", "#FCA5A5", "#7F1D1D"]];
   function photoTile(r, item) {
     var h = hash("img|" + r.id + "|" + item.name);
@@ -627,10 +623,67 @@
     d.innerHTML = '<svg viewBox="0 0 84 84" aria-hidden="true"><rect width="84" height="84" fill="#E7D3B5"/><circle cx="42" cy="42" r="36" fill="#FFFFFF"/><circle cx="42" cy="42" r="31" fill="#F3EDE3"/>' + food + '</svg>';
     return d;
   }
+  var FOOD_DIR = "shared/img/food/";
+  var FOOD_POOLS = {
+    biryani: ["biryani-1", "biryani-2", "tehari-1", "kacchi-2", "kebab-1"],
+    kacchi: ["kacchi-1", "kacchi-2", "biryani-2", "kebab-2"],
+    burger: ["burger-1", "burger-2", "burger-3"],
+    pizza: ["pizza-1", "pizza-2", "pizza-3"],
+    chinese: ["chinese-1", "chinese-2", "chinese-3", "friedrice-1"],
+    bangla: ["bangla-1", "bangla-2", "home-1", "home-2"],
+    home_food: ["home-1", "home-2", "bangla-1", "bangla-2"],
+    street_food: ["fuchka-1", "chotpoti-1", "street-1", "samosa-1"],
+    cafe: ["cafe-1", "cafe-2", "dessert-3", "dessert-1"],
+    desserts: ["dessert-1", "dessert-2", "dessert-3"]
+  };
+  var DISH_PHOTO_RULES = [
+    [/kacchi/i, ["kacchi-1", "kacchi-2"]],
+    [/tehari/i, ["tehari-1"]],
+    [/biryani|polao|pulao|jorda/i, ["biryani-1", "biryani-2"]],
+    [/burger/i, ["burger-1", "burger-2", "burger-3"]],
+    [/pizza|calzone|lasagna/i, ["pizza-1", "pizza-2", "pizza-3"]],
+    [/fried rice|singapore rice/i, ["friedrice-1"]],
+    [/chowmein|noodle|chopsuey|manchurian|wonton|dumpling|chili|chilli|schezwan|szechuan|thai /i, ["chinese-1", "chinese-2", "chinese-3"]],
+    [/fuchka|pani puri/i, ["fuchka-1"]],
+    [/chotpoti|chatpati|chana/i, ["chotpoti-1"]],
+    [/samosa|singara|beguni|piyaju|pakora|chop\b/i, ["samosa-1"]],
+    [/coffee|latte|mocha|espresso|americano|macchiato|cappuccino/i, ["cafe-1", "cafe-2"]],
+    [/kabab|kebab|tikka|seekh|roast|grill/i, ["kebab-1", "kebab-2"]],
+    [/rasmalai|mishti|firni|kheer|payesh|halua|cake|brownie|donut|muffin|cookie|ice cream|cheesecake|tiramisu|waffle|pancake|dessert|pitha/i, ["dessert-1", "dessert-2", "dessert-3"]],
+    [/hilsa|ilish|fish|curry|bhuna|rezala|kosha|dal\b|khichuri|bhat|bhorta|rice/i, ["bangla-1", "bangla-2", "home-1", "home-2"]]
+  ];
+  function pickFrom(list, seed) { return list[hash(seed) % list.length]; }
+  function foodPool(r) {
+    var k = r.cuisineKey;
+    return FOOD_POOLS[k] || FOOD_POOLS[k.replace(/ /g, "_")] || FOOD_POOLS.bangla;
+  }
+  function coverFile(r) { return pickFrom(foodPool(r), "cover|" + r.id); }
+  function dishFile(r, item) {
+    for (var i = 0; i < DISH_PHOTO_RULES.length; i++) {
+      if (DISH_PHOTO_RULES[i][0].test(item.name)) { return pickFrom(DISH_PHOTO_RULES[i][1], "dish|" + r.id + "|" + item.name); }
+    }
+    return pickFrom(foodPool(r), "dish|" + r.id + "|" + item.name);
+  }
+  function foodImg(file) {
+    return el("img", { class: "bx-img", src: FOOD_DIR + file + ".webp", alt: "", width: "600", height: "450", decoding: "async" });
+  }
+  function coverTile(r) {
+    var box = el("div", { class: "bx-tile bx-cover" });
+    var img = foodImg(coverFile(r));
+    img.addEventListener("error", function () { box.innerHTML = ""; box.appendChild(ic("bowl")); });
+    box.appendChild(img);
+    return box;
+  }
+  function dishPhoto(r, item) {
+    var box = el("div", { class: "bx-photo", "data-photo": "1" });
+    var img = foodImg(dishFile(r, item));
+    img.addEventListener("error", function () { var d = photoTile(r, item); box.innerHTML = ""; box.appendChild(d.firstChild); });
+    box.appendChild(img);
+    return box;
+  }
   function restaurantCard(r, compact) {
-
     var kids = [
-      tile("bowl"),
+      coverTile(r),
       el("div", { class: "bx-rc-body" }, [
         el("div", { class: "bx-rc-name", text: r.name }),
         el("div", { class: "bx-rc-meta" }, [ratingChip(r), el("span", { text: [r.cuisine, r.area].filter(Boolean).join(" · ") })]),
@@ -659,7 +712,6 @@
       });
       var go = btn(t("Continue"), "bx-btn-primary bx-btn-block bx-btn-lg", function () {
         var d = digits(input.value);
-
         if (/^8801\d{9}$/.test(d)) d = d.slice(2);
         if (/^1\d{9}$/.test(d)) d = "0" + d;
         if (!/^01\d{9}$/.test(d)) { err.textContent = t("Enter a valid 11 digit mobile number."); return; }
@@ -668,7 +720,6 @@
       var err = el("div", { class: "bx-error", "data-testid": "customer-phone-error" });
       input.addEventListener("input", function () { input.value = input.value.replace(/\D/g, ""); err.textContent = ""; });
       input.addEventListener("keydown", function (e) { if (e.key === "Enter") { go.click(); } });
-
       var osSeg = el("div", { class: "bx-seg", role: "radiogroup", "aria-label": "Phone" }, [
         el("button", { type: "button", class: S.phoneOs === "android" ? "is-on" : "", "data-testid": "customer-os-android", role: "radio", "aria-checked": S.phoneOs === "android" ? "true" : "false", text: "Android",
           onclick: function () { S.phoneOs = "android"; D.write("customer_phone_os", "android"); replace("login", { step: "phone" }); } }),
@@ -682,7 +733,6 @@
         err,
         go,
         el("p", { class: "bx-fine", text: t("By continuing you agree to the Terms of Use and Privacy Policy.") })
-
       ]));
     } else if (step === "signup") {
       root.appendChild(signupForm(p.phone));
@@ -735,8 +785,7 @@
         el("p", { class: "bx-muted", text: t("We sent a 6 digit code to {phone}.", { phone: phone.slice(0, 5) + " " + phone.slice(5) }) }),
         row, errO, verifyBtn,
         el("div", { class: "bx-center" }, resend),
-        el("div", { class: "bx-center" }, el("button", { type: "button", class: "bx-link", "data-testid": "customer-change-number", onclick: function () { replace("login", { step: "phone" }); }, text: t("Change number") })),
-        el("p", { class: "bx-fine", text: t("Prototype: type any 6 digits.") })
+        el("div", { class: "bx-center" }, el("button", { type: "button", class: "bx-link", "data-testid": "customer-change-number", onclick: function () { replace("login", { step: "phone" }); }, text: t("Change number") }))
       ]));
       setTimeout(function () { boxes[0].focus(); }, 30);
     }
@@ -784,6 +833,7 @@
         if (F.confirm.inp.value !== pw || !F.confirm.inp.value) { ok = bad("confirm", t("Passwords do not match.")); }
       }
       if (!ok) { return; }
+      var signed = D.read("customer_signed_up", {}) || {}; signed[phone] = name; D.write("customer_signed_up", signed);
       startSession(phone, { name: name });
     }, "customer-su-submit");
     return el("div", { class: "bx-login-body", "data-testid": "customer-signup" }, [
@@ -796,9 +846,12 @@
 
   function signIn(phone) {
     var known = S.knownPhones.indexOf(phone) !== -1;
+    var signedUp = D.read("customer_signed_up", {}) || {};
+    if (!known && signedUp[phone]) { startSession(phone, { name: signedUp[phone] }); return; }
     if (!known && phone !== STAFF_PHONE && phone !== CANCELLED_PHONE) { replace("login", { step: "signup", phone: phone }); return; }
     startSession(phone, null);
   }
+  window.FD_LOGIN_RETURNING = function () { startSession("01712345678", null); };
   function startSession(phone, profile) {
     var known = S.knownPhones.indexOf(phone) !== -1;
     var staff = phone === STAFF_PHONE;
@@ -814,7 +867,6 @@
     seedAddresses();
     S.stack = [{ name: "home", params: {} }];
     render();
-
     if (fresh) { showLocationPrompt(function () {}); }
   }
 
@@ -887,7 +939,6 @@
     var acc = S.account;
     var addr = currentAddress();
     var root = el("div", { class: "bx-col" });
-
     if (!addr && acc.locDenied) {
       root.appendChild(el("div", { class: "bx-hd bx-hd-home" }, [
         el("span", { class: "bx-wordmark" }, [ic("bowl", "bx-ic-lg"), el("span", { text: "Food Delivery" })]),
@@ -968,7 +1019,7 @@
     body.appendChild(listBox);
     paintList();
     body.appendChild(el("div", { class: "bx-spacer" }));
-    S.onCart = function () {   };
+    S.onCart = function () {  };
     return root;
   };
 
@@ -985,7 +1036,10 @@
     var root = el("div", { class: "bx-col" });
     var input = el("input", { class: "bx-input bx-input-search", type: "search", enterkeyhint: "search", placeholder: t("Search restaurants and dishes"), "data-testid": "customer-search-input", "aria-label": t("Search"), value: S.q || "" });
     var results = el("div", { class: "bx-body" });
-    var clear = iconBtn("x", function () { input.value = ""; S.q = ""; run(); input.focus(); }, "customer-search-clear", t("Clear"));
+    var clear = iconBtn("x", function () {
+      if (!input.value) { S.q = ""; tab("home"); return; }
+      input.value = ""; S.q = ""; run(); input.focus();
+    }, "customer-search-clear", t("Clear"));
     var go = iconBtn("search", function () { run(); }, "customer-search-go", t("Search"));
     root.appendChild(el("div", { class: "bx-hd" }, [el("div", { class: "bx-searchfield" }, [go, input, clear])]));
     root.appendChild(results);
@@ -996,7 +1050,6 @@
       results.innerHTML = "";
       if (!q) { return; }
       var rs = [], ds = [];
-
       if (!hasBangla(q)) {
         var low = q.toLowerCase();
         S.restaurants.forEach(function (r) {
@@ -1041,7 +1094,7 @@
 
     var body = el("div", { class: "bx-body" });
     var hero = el("div", { class: "bx-hero" }, [
-      tile("bowl"),
+      coverTile(r),
       el("div", { class: "bx-hero-top" }, [
         iconBtn("back", back, "customer-back", t("Back")),
         el("div", { class: "bx-grow" }),
@@ -1061,7 +1114,7 @@
           el("div", { class: "bx-rc-name", text: m.name }),
           el("div", { class: "bx-money", text: money(m.price) })
         ]),
-        el("div", { class: "bx-item-img" }, [hasPhoto(r, m) ? photoTile(r, m) : tile("bowl"), el("button", {
+        el("div", { class: "bx-item-img" }, [hasPhoto(r, m) ? dishPhoto(r, m) : tile("bowl"), el("button", {
           type: "button", class: "bx-plus", "data-testid": "customer-add-to-cart", "aria-label": t("Add {name}", { name: m.name }),
           disabled: r.open ? null : "true", onclick: function () { openItem(r, m); }
         }, ic("plus"))])
@@ -1374,7 +1427,6 @@
     root.appendChild(el("div", { class: "bx-foot" }, foot));
     return root;
   };
-
   function feeRow(pr) {
     if (pr.deliveryFee) { return billRow(t("Delivery fee"), money(pr.deliveryFee)); }
     return el("div", { class: "bx-bill-row" }, [
@@ -1444,7 +1496,6 @@
   function placeOrder(method, pr, addr, km) {
     var c = cart();
     var r = S.byId[c.restaurant_id];
-
     var ov = el("div", { class: "bx-placing", "data-testid": "customer-placing" }, [
       spinner(), el("h2", { text: t("Placing your order") }), el("p", { class: "bx-muted", text: r ? r.name : "" })
     ]);
@@ -1509,7 +1560,6 @@
     var steps = [["Waiting for restaurant", "store"], ["Preparing", "bowl"], ["Rider on the way", "bike"], ["Delivered", "check"]];
     sheetBox.appendChild(el("div", { class: "bx-pad" }, [
       el("h1", { class: "bx-status-title", "data-testid": "customer-status-title", text: phaseTitle(phase) }),
-
       phase === 3 ? el("div", { class: "bx-muted", text: t("Delivered. We hope you enjoy your food.") }) : null,
       el("div", { class: "bx-steps", "data-testid": "customer-steps" }, steps.map(function (s, i) {
         return el("div", { class: "bx-step" + (i <= phase ? " is-done" : "") + (i === phase ? " is-now" : ""), "data-step": i }, [
@@ -1538,7 +1588,6 @@
       ]));
       if (!ratings()[o.id] && !S.ratedShown[o.id]) { S.ratedShown[o.id] = true; setTimeout(function () { openRate(o); }, 250); }
     }
-
     var last = o.status;
     var poll = setInterval(function () {
       var cur = orderById(p.id);
@@ -1899,7 +1948,6 @@
     S.byId = {};
     S.restaurants.forEach(function (r) { S.byId[r.id] = r; });
     S.ratedShown = {};
-
     S.orderRows.forEach(function (o) { var r = S.byId[first(o.restaurant_id)]; if (r) { r.orders += 1; } });
 
     var pid = S.meta.personas ? S.meta.personas.customer_id : 1;
@@ -1908,7 +1956,6 @@
     S.personaName = pa.name || "Rahim Uddin";
     S.knownPhones = [DEMO_PHONE];
     if (pa.phone) { S.knownPhones.push(digits(pa.phone)); }
-
     var live = S.restaurants.filter(function (r) { return r.live; });
     S.pastOrders = S.personaOrders.filter(function (o) { return phaseOf(o.status) === 3 || phaseOf(o.status) === -1; });
     var need = 4 - S.pastOrders.length;
@@ -1921,7 +1968,6 @@
         payment_method: i % 2 ? "prepaid" : "cod", delivery_fee: baseFee(), discount_amount: 0,
         placed_at: D.addDays(nowIso(), -(2 + i * 3)) + " 13:05:00",
         address: { label: "Home", text: pa.street || "House 42, Road 9/A", area: pa.area || "Dhanmondi" },
-
         items: [
           { menu_item_id: pick[0].id, name: pick[0].name, qty: 1 + (i % 2), price: pick[0].price, base_price: i % 2 === 0 ? pick[0].price - 20 : pick[0].price },
           { menu_item_id: pick[1].id, name: pick[1].name, qty: 1, price: pick[1].price, base_price: pick[1].price }
