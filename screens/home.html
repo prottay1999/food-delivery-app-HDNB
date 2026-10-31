@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoodApp home screen</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --fd-primary: #0E7A6E;
+  --fd-primary-dark: #0A5F56;
+  --fd-ink: #1A1D23;
+  --fd-grey: #5F6570;
+  --fd-grey-light: #9AA0AA;
+  --fd-hair: #E4E6EA;
+  --fd-bg: #F7F8F9;
+  --fd-white: #FFFFFF;
+  --fd-radius: 10px;
+  --fd-radius-sm: 6px;
+  --fd-status-placed: #B45309;
+  --fd-status-accepted: #0E7A6E;
+  --fd-status-transit: #1D4ED8;
+  --fd-status-delivered: #15803D;
+  --fd-status-cancelled: #B91C1C;
+  --fd-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Bengali", "Nirmala UI", sans-serif;
+  --fd-font-bn: "Noto Sans Bengali", "Nirmala UI", sans-serif;
+  --fd-shadow-card: 0 1px 2px rgba(26, 29, 35, .04);
+  --fd-shadow-pop: 0 8px 28px rgba(26, 29, 35, .12);
+  --fd-t: 160ms;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--fd-font);
+  color: var(--fd-ink);
+  background: var(--fd-bg);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--fd-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.fd-phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  flex: none;
+  background: var(--fd-white);
+  border: 10px solid #12151B;
+  border-radius: 44px;
+  box-shadow: var(--fd-shadow-pop);
+  overflow: hidden;
+  transform-origin: center center;
+}
+@media (max-height: 900px) {
+.fd-phone { transform: scale(.92); }
+}
+@media (max-height: 820px) {
+.fd-phone { transform: scale(.86); }
+}
+@media (max-height: 760px) {
+.fd-phone { transform: scale(.80); }
+}
+@media (max-height: 700px) {
+.fd-phone { transform: scale(.74); }
+}
+.fd-phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 26px;
+  background: #12151B;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  z-index: 5;
+}
+.bx-stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+  background: var(--fd-bg);
+}
+:root { --bx-scale: 1; }
+@media (max-height: 900px) {
+:root { --bx-scale: 0.95; }
+}
+@media (max-height: 840px) {
+:root { --bx-scale: 0.88; }
+}
+@media (max-height: 780px) {
+:root { --bx-scale: 0.84; }
+}
+@media (max-height: 720px) {
+:root { --bx-scale: 0.76; }
+}
+.bx-fit {
+  width: calc(390px * var(--bx-scale));
+  height: calc(844px * var(--bx-scale));
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bx-fit > .fd-phone { transform: scale(var(--bx-scale)); transform-origin: center center; position: relative; }
+.bx-app {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--fd-white);
+  font-family: var(--fd-font);
+  color: var(--fd-ink);
+}
+.bx-status {
+  flex: none;
+  height: 34px;
+  padding: 8px 26px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--fd-white);
+}
+.bx-sysicons { width: 38px; height: 12px; fill: currentColor; }
+.bx-status-icons .bx-ic { display: none; }
+.bx-view { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
+.bx-screen, .bx-col { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.bx-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+.bx-grow { flex: 1 1 auto; min-width: 0; }
+.bx-spacer { height: 24px; flex: none; }
+.bx-muted { color: var(--fd-grey); font-size: 13px; }
+.bx-clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bx-ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.bx-ic-xs { width: 14px; height: 14px; }
+.bx-ic-sm { width: 18px; height: 18px; }
+.bx-hd {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 8px 12px;
+  background: var(--fd-white);
+  border-bottom: 1px solid var(--fd-hair);
+}
+.bx-iconbtn {
+  position: relative;
+  flex: none;
+  width: 38px; height: 38px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--fd-white);
+  color: var(--fd-ink);
+  border: 1px solid var(--fd-hair);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.bx-iconbtn:hover { border-color: var(--fd-grey-light); }
+.bx-tabbar {
+  flex: none;
+  display: flex;
+  background: var(--fd-white);
+  border-top: 1px solid var(--fd-hair);
+  padding: 6px 4px 10px;
+}
+.bx-tab {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 0;
+  background: none; border: 0;
+  font: inherit; font-size: 11px; font-weight: 600;
+  color: var(--fd-grey);
+  cursor: pointer;
+}
+.bx-tab.is-active { color: var(--fd-primary); }
+.bx-tab:focus-visible, .bx-btn:focus-visible, .bx-iconbtn:focus-visible { outline: 2px solid var(--fd-primary); outline-offset: 2px; }
+.bx-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 16px;
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  color: var(--fd-ink);
+  background: var(--fd-white);
+  border: 1px solid var(--fd-hair);
+  border-radius: var(--fd-radius-sm);
+  cursor: pointer;
+}
+.bx-btn:hover { border-color: var(--fd-grey-light); }
+.bx-btn:disabled { opacity: .5; cursor: not-allowed; }
+.bx-btn-sm { height: 34px; padding: 0 12px; font-size: 13px; }
+.bx-tile {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  background: var(--fd-bg);
+  color: var(--fd-grey-light);
+}
+.bx-tile .bx-ic { width: 34px; height: 34px; }
+.bx-sec-hd { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px; }
+.bx-sec-hd h3 { margin: 0; font-size: 16px; }
+.bx-hd-home { gap: 8px; }
+.bx-addr { display: flex; align-items: center; gap: 8px; min-width: 0; background: none; border: 0; font: inherit; color: var(--fd-ink); cursor: pointer; text-align: left; }
+.bx-addr-text { display: flex; flex-direction: column; min-width: 0; }
+.bx-addr-l { font-size: 11px; color: var(--fd-grey); }
+.bx-addr-v { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bx-searchbar {
+  display: flex; align-items: center; gap: 10px;
+  width: calc(100% - 32px); margin: 12px 16px 4px; height: 44px; padding: 0 14px;
+  font: inherit; font-size: 14px; color: var(--fd-grey);
+  background: var(--fd-bg); border: 1px solid var(--fd-hair); border-radius: 999px; cursor: pointer; text-align: left;
+}
+.bx-banners { display: flex; gap: 10px; padding: 4px 16px 6px; overflow-x: auto; scrollbar-width: none; }
+.bx-banner { flex: none; width: 260px; padding: 14px; background: var(--fd-white); border: 1px solid var(--fd-hair); border-radius: var(--fd-radius); }
+.bx-banner-t { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.bx-hscroll { display: flex; gap: 10px; padding: 0 16px 6px; overflow-x: auto; scrollbar-width: none; }
+.bx-again { flex: none; width: 200px; display: flex; flex-direction: column; gap: 6px; padding: 12px; background: var(--fd-white); border: 1px solid var(--fd-hair); border-radius: var(--fd-radius); }
+.bx-again .bx-btn { margin-top: 4px; }
+.bx-list { display: flex; flex-direction: column; gap: 14px; padding: 0 16px; }
+.bx-rc {
+  display: flex; flex-direction: column; text-align: left; padding: 0;
+  font: inherit; color: var(--fd-ink); cursor: pointer; overflow: hidden;
+  background: var(--fd-white); border: 1px solid var(--fd-hair); border-radius: var(--fd-radius);
+}
+.bx-rc .bx-tile { height: 110px; border-radius: 0; }
+.bx-rc-body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.bx-rc-name { font-weight: 700; font-size: 14px; }
+.bx-rc-meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--fd-grey); }
+.bx-rating { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; color: var(--fd-ink); }
+.bx-rating .bx-ic { fill: var(--fd-ink); }
+.bx-body > .bx-rc { width: calc(100% - 32px); margin: 0 16px 12px; }
+.bx-layer { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+.bx-layer > * { pointer-events: auto; }
+.bx-toast {
+  position: absolute; left: 24px; right: 24px; bottom: 84px; padding: 12px 16px; text-align: center;
+  font-size: 13px; font-weight: 600; color: var(--fd-white); background: var(--fd-ink); border-radius: var(--fd-radius-sm); z-index: 60;
+}
+@media (max-width: 500px) {
+.bx-stage { padding: 0; min-height: 100vh; display: block; }
+.bx-fit { width: 100%; height: 100vh; height: 100dvh; display: block; }
+.bx-fit > .fd-phone {
+    width: 100%; height: 100%; border: 0; border-radius: 0; box-shadow: none; transform: none;
+  }
+.fd-phone-notch, .bx-status { display: none; }
+}
+</style>
+</head>
+<body>
+<!-- FoodApp home screen. One file, no other files needed. Open it in a browser. -->
+<main class="bx-stage">
+  <div class="bx-fit">
+    <div class="fd-phone">
+      <div class="fd-phone-notch" aria-hidden="true"></div>
+      <div class="bx-app">
+<div class="bx-status" aria-hidden="true"><span class="bx-status-time">13:10</span><span class="bx-status-icons"><svg viewBox="0 0 40 12" class="bx-sysicons"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><rect x="23" y="1" width="16" height="10" rx="2.5" fill="none" stroke="currentColor"/><rect x="25" y="3" width="10" height="6" rx="1"/></svg></span></div><div class="bx-view"><div class="bx-col bx-screen"><div class="bx-hd bx-hd-home"><button type="button" class="bx-addr" data-go="address"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-sm" aria-hidden="true"><path d="M12 21s-6.5-5.7-6.5-11a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span class="bx-addr-text"><span class="bx-addr-l">Deliver to</span><span class="bx-addr-v">Home, Dhanmondi<svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></span></button><div class="bx-grow"></div><button type="button" class="bx-iconbtn" data-go="basket" aria-label="Basket"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M2 3h2.2l1.9 11.2a1.5 1.5 0 0 0 1.5 1.25h9.1a1.5 1.5 0 0 0 1.47-1.2l1.33-6.55H5.4"/></svg></button></div><div class="bx-body"><button type="button" class="bx-searchbar" data-go="search"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><span>Search restaurants and dishes</span></button><div class="bx-banners"><div class="bx-banner"><div class="bx-banner-t">Free delivery above Tk 500</div><div class="bx-muted">Code FREEDEL500. Applied at checkout.</div></div><div class="bx-banner"><div class="bx-banner-t">Order from the best rated</div><div class="bx-muted">Restaurants people near you love.</div></div></div><div class="bx-sec-hd"><h3>Order again</h3></div><div class="bx-hscroll"><div class="bx-again"><div class="bx-rc-name">Ruchi Wok House</div><div class="bx-muted bx-clamp">1 x Fried Wonton, 1 x Thai Soup</div><button type="button" class="bx-btn bx-btn-sm" data-go="Order again">Order again</button></div><div class="bx-again"><div class="bx-rc-name">Padma Bakery and Cafe</div><div class="bx-muted bx-clamp">2 x Pancake, 1 x Chocolate Cake</div><button type="button" class="bx-btn bx-btn-sm" data-go="Order again">Order again</button></div></div><div class="bx-sec-hd"><h3>Restaurants near you</h3></div><div class="bx-list"><button type="button" class="bx-rc" data-restaurant="Ruchi Wok House"><div class="bx-tile"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4"/></svg></div><div class="bx-rc-body"><div class="bx-rc-name">Ruchi Wok House</div><div class="bx-rc-meta"><span class="bx-rating"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>3.8</span><span>Chinese &middot; Mohammadpur</span></div></div></button><button type="button" class="bx-rc" data-restaurant="Padma Bakery and Cafe"><div class="bx-tile"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4"/></svg></div><div class="bx-rc-body"><div class="bx-rc-name">Padma Bakery and Cafe</div><div class="bx-rc-meta"><span class="bx-rating"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>3.9</span><span>Cafe &middot; Banani</span></div></div></button><button type="button" class="bx-rc" data-restaurant="Megh Kacchi House"><div class="bx-tile"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4"/></svg></div><div class="bx-rc-body"><div class="bx-rc-name">Megh Kacchi House</div><div class="bx-rc-meta"><span class="bx-rating"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>4.4</span><span>Kacchi &middot; Bashundhara</span></div></div></button><button type="button" class="bx-rc" data-restaurant="Neel Kacchi House"><div class="bx-tile"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4"/></svg></div><div class="bx-rc-body"><div class="bx-rc-name">Neel Kacchi House</div><div class="bx-rc-meta"><span class="bx-rating"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>4.4</span><span>Kacchi &middot; Mohammadpur</span></div></div></button><button type="button" class="bx-rc" data-restaurant="Meghna Hotel and Restaurant"><div class="bx-tile"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4"/></svg></div><div class="bx-rc-body"><div class="bx-rc-name">Meghna Hotel and Restaurant</div><div class="bx-rc-meta"><span class="bx-rating"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>4.5</span><span>Bangla &middot; Mohammadpur</span></div></div></button><button type="button" class="bx-rc" data-restaurant="Haji Grill and Burger"><div class="bx-tile"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4"/></svg></div><div class="bx-rc-body"><div class="bx-rc-name">Haji Grill and Burger</div><div class="bx-rc-meta"><span class="bx-rating"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>3.6</span><span>Burger &middot; Mohammadpur</span></div></div></button></div><div class="bx-spacer"></div></div></div></div><nav class="bx-tabbar" aria-label="Main"><button type="button" class="bx-tab is-active" data-tab="home"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg><span>Home</span></button><button type="button" class="bx-tab" data-tab="search"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><span>Search</span></button><button type="button" class="bx-tab" data-tab="orders"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span>Orders</span></button><button type="button" class="bx-tab" data-tab="account"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Account</span></button></nav>
+        <div class="bx-layer"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+var ICONS = {"pin":"<path d=\"M12 21s-6.5-5.7-6.5-11a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11-6.5 11z\"/><circle cx=\"12\" cy=\"10\" r=\"2.3\"/>"};
+var layer = document.querySelector('.bx-layer');
+function toast(msg) {
+  var old = layer.querySelectorAll('.bx-toast');
+  for (var i = 0; i < old.length; i++) { old[i].remove(); }
+  var n = document.createElement('div');
+  n.className = 'bx-toast'; n.setAttribute('role', 'status'); n.textContent = msg;
+  layer.appendChild(n);
+  setTimeout(function () { n.remove(); }, 2400);
+}
+function money(n) {
+  var s = String(Math.round(n)), head = s.slice(0, -3), tail = s.slice(-3);
+  if (s.length > 3) { s = head.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + tail; }
+  return 'Tk ' + s;
+}
+function icon(name, cls) {
+  return '<svg viewBox="0 0 24 24" class="bx-ic ' + (cls || '') + '" aria-hidden="true">' + ICONS[name] + '</svg>';
+}
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+var notes = {
+  address: 'Opens the address list',
+  basket: 'Opens the basket screen',
+  search: 'Opens the search screen',
+  'Order again': 'Adds the last order to the basket'
+};
+document.addEventListener('click', function (e) {
+  var go = e.target.closest('[data-go]');
+  if (go) { toast(notes[go.getAttribute('data-go')] || 'Opens another screen'); return; }
+  var rc = e.target.closest('[data-restaurant]');
+  if (rc) { toast('Opens the menu of ' + rc.getAttribute('data-restaurant')); return; }
+  var tab = e.target.closest('[data-tab]');
+  if (tab && tab.getAttribute('data-tab') !== 'home') { toast('Opens the ' + tab.getAttribute('data-tab') + ' screen'); }
+});
+</script>
+</body>
+</html>

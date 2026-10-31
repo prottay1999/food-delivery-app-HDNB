@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoodApp</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="shared/app.css">
+<link rel="stylesheet" href="customer.css">
+</head>
+<body>
+<main class="bx-stage" id="bx-stage">
+  <div class="bx-fit">
+    <div class="fd-phone" id="bx-phone">
+      <div class="fd-phone-notch" aria-hidden="true"></div>
+      <div class="bx-app" id="bx-app" data-testid="customer-app">
+      </div>
+    </div>
+  </div>
+  <aside class="bx-proto" id="bx-proto" aria-label="Prototype controls">
+    <h2>Controls</h2>
+    <p>These help you walk through the app.</p>
+    <button type="button" class="fd-btn" id="bx-proto-advance" data-testid="customer-proto-advance">Move the latest order to the next status</button>
+    <button type="button" class="fd-btn" id="bx-proto-reset" data-testid="customer-proto-reset">Reset prototype data</button>
+    <h3>Test logins</h3>
+    <ul>
+      <li>OTP: any 6 digits work.</li>
+      <li>Returning customer: 01712 345678. Has past orders.</li>
+      <li>Any other number opens a new account with no orders.</li>
+      <li>One cancelled order, no completed one: 01712 000002.</li>
+      <li>Staff account: 01999 000001.</li>
+    </ul>
+  </aside>
+</main>
+<script src="shared/data.js"></script>
+<script src="shared/common.js"></script>
+<script src="customer-bn.js"></script>
+<script src="customer.js"></script>
+</body>
+</html>

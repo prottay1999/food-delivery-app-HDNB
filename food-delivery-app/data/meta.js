@@ -1,0 +1,1 @@
+window.FD_DATA.register("meta",{"now":"2027-03-31 13:10:00","delivery_fee":45,"currency":"Tk","personas":{"customer_id":"A1058040","restaurant_id":"R1661","rider_id":"RD2374"},"promo_codes":[{"code":"FIRSTFREE","discount_amount":0,"free_delivery":true},{"code":"FREEDEL500","discount_amount":0,"free_delivery":true}]});

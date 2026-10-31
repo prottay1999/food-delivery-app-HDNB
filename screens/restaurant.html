@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoodApp restaurant menu screen</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --fd-primary: #0E7A6E;
+  --fd-primary-dark: #0A5F56;
+  --fd-ink: #1A1D23;
+  --fd-grey: #5F6570;
+  --fd-grey-light: #9AA0AA;
+  --fd-hair: #E4E6EA;
+  --fd-bg: #F7F8F9;
+  --fd-white: #FFFFFF;
+  --fd-radius: 10px;
+  --fd-radius-sm: 6px;
+  --fd-status-placed: #B45309;
+  --fd-status-accepted: #0E7A6E;
+  --fd-status-transit: #1D4ED8;
+  --fd-status-delivered: #15803D;
+  --fd-status-cancelled: #B91C1C;
+  --fd-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Bengali", "Nirmala UI", sans-serif;
+  --fd-font-bn: "Noto Sans Bengali", "Nirmala UI", sans-serif;
+  --fd-shadow-card: 0 1px 2px rgba(26, 29, 35, .04);
+  --fd-shadow-pop: 0 8px 28px rgba(26, 29, 35, .12);
+  --fd-t: 160ms;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--fd-font);
+  color: var(--fd-ink);
+  background: var(--fd-bg);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--fd-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.fd-phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  flex: none;
+  background: var(--fd-white);
+  border: 10px solid #12151B;
+  border-radius: 44px;
+  box-shadow: var(--fd-shadow-pop);
+  overflow: hidden;
+  transform-origin: center center;
+}
+@media (max-height: 900px) {
+.fd-phone { transform: scale(.92); }
+}
+@media (max-height: 820px) {
+.fd-phone { transform: scale(.86); }
+}
+@media (max-height: 760px) {
+.fd-phone { transform: scale(.80); }
+}
+@media (max-height: 700px) {
+.fd-phone { transform: scale(.74); }
+}
+.fd-phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 26px;
+  background: #12151B;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  z-index: 5;
+}
+.bx-stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+  background: var(--fd-bg);
+}
+:root { --bx-scale: 1; }
+@media (max-height: 900px) {
+:root { --bx-scale: 0.95; }
+}
+@media (max-height: 840px) {
+:root { --bx-scale: 0.88; }
+}
+@media (max-height: 780px) {
+:root { --bx-scale: 0.84; }
+}
+@media (max-height: 720px) {
+:root { --bx-scale: 0.76; }
+}
+.bx-fit {
+  width: calc(390px * var(--bx-scale));
+  height: calc(844px * var(--bx-scale));
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bx-fit > .fd-phone { transform: scale(var(--bx-scale)); transform-origin: center center; position: relative; }
+.bx-app {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--fd-white);
+  font-family: var(--fd-font);
+  color: var(--fd-ink);
+}
+.bx-status {
+  flex: none;
+  height: 34px;
+  padding: 8px 26px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--fd-white);
+}
+.bx-sysicons { width: 38px; height: 12px; fill: currentColor; }
+.bx-status-icons .bx-ic { display: none; }
+.bx-view { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
+.bx-screen, .bx-col { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.bx-rel { position: relative; }
+.bx-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+.bx-grow { flex: 1 1 auto; min-width: 0; }
+.bx-left { text-align: left; }
+.bx-spacer { height: 24px; flex: none; }
+.bx-muted { color: var(--fd-grey); font-size: 13px; }
+.bx-pad { padding: 12px 16px; }
+.bx-money { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
+.bx-ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.bx-ic-xs { width: 14px; height: 14px; }
+.bx-iconbtn {
+  position: relative;
+  flex: none;
+  width: 38px; height: 38px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--fd-white);
+  color: var(--fd-ink);
+  border: 1px solid var(--fd-hair);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.bx-iconbtn:hover { border-color: var(--fd-grey-light); }
+.bx-btn:focus-visible, .bx-iconbtn:focus-visible { outline: 2px solid var(--fd-primary); outline-offset: 2px; }
+.bx-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 16px;
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  color: var(--fd-ink);
+  background: var(--fd-white);
+  border: 1px solid var(--fd-hair);
+  border-radius: var(--fd-radius-sm);
+  cursor: pointer;
+}
+.bx-btn:hover { border-color: var(--fd-grey-light); }
+.bx-btn:disabled { opacity: .5; cursor: not-allowed; }
+.bx-btn-primary { color: var(--fd-white); background: var(--fd-primary); border-color: var(--fd-primary); }
+.bx-btn-primary:hover { background: var(--fd-primary-dark); border-color: var(--fd-primary-dark); }
+.bx-btn-block { display: flex; width: 100%; }
+.bx-btn-lg { height: 52px; font-size: 16px; }
+.bx-chip-tag {
+  flex: none; display: inline-block; padding: 2px 9px; font-size: 11px; font-weight: 600;
+  color: var(--fd-grey); background: var(--fd-bg); border: 1px solid var(--fd-hair); border-radius: 999px;
+}
+.bx-tile {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  background: var(--fd-bg);
+  color: var(--fd-grey-light);
+}
+.bx-tile .bx-ic { width: 34px; height: 34px; }
+.bx-rc-name { font-weight: 700; font-size: 14px; }
+.bx-rc-meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--fd-grey); }
+.bx-rating { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; color: var(--fd-ink); }
+.bx-rating .bx-ic { fill: var(--fd-ink); }
+.bx-hero { position: relative; height: 150px; flex: none; }
+.bx-hero .bx-tile { border-radius: 0; }
+.bx-hero-top { position: absolute; top: 10px; left: 12px; right: 12px; display: flex; align-items: center; z-index: 2; }
+.bx-hero-top .bx-iconbtn { background: var(--fd-white); }
+.bx-rest-head h1 { margin: 0 0 4px; font-size: 22px; }
+.bx-menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--fd-hair); }
+.bx-item-img { position: relative; flex: none; width: 84px; height: 84px; border: 1px solid var(--fd-hair); border-radius: var(--fd-radius); overflow: hidden; }
+.bx-plus {
+  position: absolute; right: 6px; bottom: 6px;
+  width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+  color: var(--fd-ink); background: var(--fd-white); border: 1px solid var(--fd-hair); border-radius: 999px; cursor: pointer;
+}
+.bx-plus:disabled { opacity: .4; cursor: not-allowed; }
+.bx-plus .bx-ic { width: 18px; height: 18px; }
+.bx-cartbar-wrap { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 16px 12px; pointer-events: none; }
+.bx-cartbar {
+  pointer-events: auto; display: flex; align-items: center; gap: 12px; width: 100%; height: 52px; padding: 0 16px;
+  font: inherit; font-weight: 700; color: var(--fd-white); background: var(--fd-primary); border: 0; border-radius: var(--fd-radius); cursor: pointer;
+}
+.bx-cartbar-n { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; border: 1px solid var(--fd-white); border-radius: 6px; font-size: 13px; }
+.bx-layer { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+.bx-layer > * { pointer-events: auto; }
+.bx-sheet-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+.bx-scrim { position: absolute; inset: 0; background: rgba(26, 29, 35, .45); }
+.bx-sheet { position: relative; max-height: 88%; overflow-y: auto; background: var(--fd-white); border-radius: 18px 18px 0 0; animation: bx-up 200ms ease; }
+.bx-sheet-title { margin: 0 0 4px; font-size: 18px; }
+.bx-item-head { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+.bx-item-price { margin-bottom: 6px; }
+.bx-opt-hd { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 4px; }
+.bx-opt { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 0; font: inherit; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--fd-hair); cursor: pointer; }
+.bx-mark { flex: none; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; border: 1.5px solid var(--fd-grey-light); border-radius: 999px; }
+.bx-mark.is-box { border-radius: 5px; }
+.bx-opt.is-on .bx-mark, .bx-mark.is-on { border-color: var(--fd-primary); background: var(--fd-primary); color: var(--fd-white); }
+.bx-qtyrow { display: flex; align-items: center; justify-content: space-between; margin: 16px 0; }
+.bx-stepper { display: inline-flex; align-items: center; border: 1px solid var(--fd-hair); border-radius: 999px; }
+.bx-stepper button { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; background: none; border: 0; cursor: pointer; color: var(--fd-ink); }
+.bx-stepper .bx-ic { width: 16px; height: 16px; }
+.bx-stepper-n { min-width: 24px; text-align: center; font-weight: 700; }
+.bx-toast {
+  position: absolute; left: 24px; right: 24px; bottom: 84px; padding: 12px 16px; text-align: center;
+  font-size: 13px; font-weight: 600; color: var(--fd-white); background: var(--fd-ink); border-radius: var(--fd-radius-sm); z-index: 60;
+}
+@media (max-width: 500px) {
+.bx-stage { padding: 0; min-height: 100vh; display: block; }
+.bx-fit { width: 100%; height: 100vh; height: 100dvh; display: block; }
+.bx-fit > .fd-phone {
+    width: 100%; height: 100%; border: 0; border-radius: 0; box-shadow: none; transform: none;
+  }
+.fd-phone-notch, .bx-status { display: none; }
+}
+.bx-photo { width: 100%; height: 100%; }
+.bx-photo svg { display: block; width: 100%; height: 100%; }
+.bx-sheet.bx-sheet-item { display: flex; flex-direction: column; overflow: hidden; max-height: 62%; }
+.bx-sheet-in { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.bx-sheet-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.bx-sheet-foot { flex: none; padding: 10px 16px 14px; background: var(--fd-white); border-top: 1px solid var(--fd-hair); }
+.bx-btn-primary:disabled, .bx-btn-primary:disabled:hover { opacity: 1; color: var(--fd-grey-light); background: var(--fd-hair); border-color: var(--fd-hair); }
+</style>
+</head>
+<body>
+<!-- FoodApp restaurant menu screen. One file, no other files needed. Open it in a browser. -->
+<main class="bx-stage">
+  <div class="bx-fit">
+    <div class="fd-phone">
+      <div class="fd-phone-notch" aria-hidden="true"></div>
+      <div class="bx-app">
+<div class="bx-status" aria-hidden="true"><span class="bx-status-time">13:10</span><span class="bx-status-icons"><svg viewBox="0 0 40 12" class="bx-sysicons"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><rect x="23" y="1" width="16" height="10" rx="2.5" fill="none" stroke="currentColor"/><rect x="25" y="3" width="10" height="6" rx="1"/></svg></span></div><div class="bx-view"><div class="bx-col bx-rel bx-screen"><div class="bx-body"><div class="bx-hero"><div class="bx-tile"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M4 12h16a8 8 0 0 1-16 0Z"/><path d="M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4"/></svg></div><div class="bx-hero-top"><button type="button" class="bx-iconbtn" data-go="Back to the previous screen" aria-label="Back"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></button><div class="bx-grow"></div><button type="button" class="bx-iconbtn" data-go="Share" aria-label="Share"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M12 15V4"/><path d="m8 8 4-4 4 4"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg></button></div></div><div class="bx-pad bx-rest-head"><h1>Megh Kacchi House</h1><div class="bx-rc-meta"><span class="bx-rating"><svg viewBox="0 0 24 24" class="bx-ic bx-ic-xs" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z"/></svg>4.4</span><span>Kacchi &middot; Bashundhara</span></div></div><div class="bx-cat bx-menu-list" id="menu"></div><div class="bx-spacer"></div></div><div class="bx-cartbar-wrap" id="cartbar"></div></div></div>
+        <div class="bx-layer"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+var ICONS = {"bowl":"<path d=\"M4 12h16a8 8 0 0 1-16 0Z\"/><path d=\"M9 8.5c0-1.2.9-1.2.9-2.4M13 8.5c0-1.2.9-1.2.9-2.4\"/>","plus":"<path d=\"M12 5v14M5 12h14\"/>","x":"<path d=\"M6 6l12 12M18 6 6 18\"/>","check":"<path d=\"m5 12.5 4.5 4.5L19 7.5\"/>","minus":"<path d=\"M5 12h14\"/>"};
+var layer = document.querySelector('.bx-layer');
+function toast(msg) {
+  var old = layer.querySelectorAll('.bx-toast');
+  for (var i = 0; i < old.length; i++) { old[i].remove(); }
+  var n = document.createElement('div');
+  n.className = 'bx-toast'; n.setAttribute('role', 'status'); n.textContent = msg;
+  layer.appendChild(n);
+  setTimeout(function () { n.remove(); }, 2400);
+}
+function money(n) {
+  var s = String(Math.round(n)), head = s.slice(0, -3), tail = s.slice(-3);
+  if (s.length > 3) { s = head.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + tail; }
+  return 'Tk ' + s;
+}
+function icon(name, cls) {
+  return '<svg viewBox="0 0 24 24" class="bx-ic ' + (cls || '') + '" aria-hidden="true">' + ICONS[name] + '</svg>';
+}
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+var MENU = [["Chicken Roast",160,0,"Mains",0],["Kacchi Biryani",520,1,"Mains",250],["Borhani",80,0,"Drinks",0],["Beef Tehari",270,0,"Mains",130],["Salad",80,0,"Mains",0],["Mutton Rezala",580,1,"Mains",0],["Firni",90,0,"Desserts",0],["Chicken Kacchi",530,0,"Mains",210],["Jali Kabab",90,0,"Mains",0],["Plain Polao",140,1,"Mains",0],["Soft Drink",60,0,"Drinks",0],["Doi",110,0,"Desserts",0]];
+var PHOTOS = ["<svg viewBox=\"0 0 84 84\" aria-hidden=\"true\"><rect width=\"84\" height=\"84\" fill=\"#E7D3B5\"/><circle cx=\"42\" cy=\"42\" r=\"36\" fill=\"#FFFFFF\"/><circle cx=\"42\" cy=\"42\" r=\"31\" fill=\"#F3EDE3\"/><ellipse cx=\"42\" cy=\"50\" rx=\"28\" ry=\"12\" fill=\"#FCA5A5\"/><path d=\"M18 50c2-18 14-26 24-26s22 8 24 26z\" fill=\"#B91C1C\"/><circle cx=\"36\" cy=\"38\" r=\"3\" fill=\"#FCA5A5\"/><circle cx=\"48\" cy=\"42\" r=\"3\" fill=\"#FCA5A5\"/><circle cx=\"42\" cy=\"32\" r=\"3\" fill=\"#7F1D1D\"/></svg>","<svg viewBox=\"0 0 84 84\" aria-hidden=\"true\"><rect width=\"84\" height=\"84\" fill=\"#E7D3B5\"/><circle cx=\"42\" cy=\"42\" r=\"36\" fill=\"#FFFFFF\"/><circle cx=\"42\" cy=\"42\" r=\"31\" fill=\"#F3EDE3\"/><ellipse cx=\"42\" cy=\"50\" rx=\"28\" ry=\"12\" fill=\"#F59E0B\"/><path d=\"M18 50c2-18 14-26 24-26s22 8 24 26z\" fill=\"#C2410C\"/><circle cx=\"36\" cy=\"38\" r=\"3\" fill=\"#F59E0B\"/><circle cx=\"48\" cy=\"42\" r=\"3\" fill=\"#F59E0B\"/><circle cx=\"42\" cy=\"32\" r=\"3\" fill=\"#7C2D12\"/></svg>","<svg viewBox=\"0 0 84 84\" aria-hidden=\"true\"><rect width=\"84\" height=\"84\" fill=\"#E7D3B5\"/><circle cx=\"42\" cy=\"42\" r=\"36\" fill=\"#FFFFFF\"/><circle cx=\"42\" cy=\"42\" r=\"31\" fill=\"#F3EDE3\"/><ellipse cx=\"42\" cy=\"50\" rx=\"28\" ry=\"12\" fill=\"#FDE68A\"/><path d=\"M18 50c2-18 14-26 24-26s22 8 24 26z\" fill=\"#A16207\"/><circle cx=\"36\" cy=\"38\" r=\"3\" fill=\"#FDE68A\"/><circle cx=\"48\" cy=\"42\" r=\"3\" fill=\"#FDE68A\"/><circle cx=\"42\" cy=\"32\" r=\"3\" fill=\"#713F12\"/></svg>"];
+// MENU rows: [name, price, hasPhoto, kind, half-size price drop]
+var EXTRAS = [['Extra salad', 20], ['Fried egg', 25], ['Extra raita', 25]];
+var DRINKS = [['Soft drink', 40], ['Borhani', 50], ['Lemon soda', 45]];
+var basket = [];
+
+function paintMenu() {
+  var html = '';
+  MENU.forEach(function (m, i) {
+    var img = m[2] ? '<div class="bx-photo">' + PHOTOS[i % PHOTOS.length] + '</div>' : '<div class="bx-tile">' + icon('bowl') + '</div>';
+    html += '<div class="bx-menu-item"><div class="bx-grow bx-left"><div class="bx-rc-name">' + esc(m[0]) + '</div><div class="bx-money">' + money(m[1]) + '</div></div>' +
+      '<div class="bx-item-img">' + img + '<button type="button" class="bx-plus" data-add="' + i + '" aria-label="Add ' + esc(m[0]) + '">' + icon('plus') + '</button></div></div>';
+  });
+  document.getElementById('menu').innerHTML = html;
+}
+
+function paintBar() {
+  var bar = document.getElementById('cartbar');
+  if (!basket.length) { bar.innerHTML = ''; return; }
+  var n = 0, total = 0;
+  basket.forEach(function (l) { n += l.qty; total += l.unit * l.qty; });
+  bar.innerHTML = '<button type="button" class="bx-cartbar" data-basket="1"><span class="bx-cartbar-n">' + n + '</span><span class="bx-grow bx-left">View basket</span><span class="bx-money">' + money(total) + '</span></button>';
+}
+
+function groupsFor(m) {
+  var sized = m[4] > 0;
+  if (m[3] !== 'Mains' && !sized) { return []; }
+  var g = [{ id: 'extra', title: 'Add extras', required: false, multi: true, choices: EXTRAS.map(function (c) { return { label: c[0], price: c[1] }; }) }];
+  if (sized) {
+    g.push({ id: 'drink', title: 'Add a drink', required: false, multi: true, choices: DRINKS.map(function (c) { return { label: c[0], price: c[1] }; }) });
+    g.push({ id: 'size', title: 'Size', required: true, multi: false, choices: [{ label: 'Half', price: -m[4] }, { label: 'Full', price: 0 }] });
+  }
+  return g;
+}
+
+function optMoney(p) { return p > 0 ? '+' + money(p) : (p < 0 ? '- ' + money(-p) : ''); }
+
+function openItem(m) {
+  var groups = groupsFor(m), sel = {}, qty = 1;
+  var wrap = document.createElement('div');
+  wrap.className = 'bx-sheet-wrap';
+  wrap.innerHTML = '<div class="bx-scrim"></div><div class="bx-sheet bx-sheet-item" role="dialog"><div class="bx-sheet-in"><div class="bx-sheet-scroll bx-pad"></div><div class="bx-sheet-foot"></div></div></div>';
+  layer.appendChild(wrap);
+  var scroller = wrap.querySelector('.bx-sheet-scroll'), foot = wrap.querySelector('.bx-sheet-foot');
+  function close() { wrap.remove(); }
+  wrap.querySelector('.bx-scrim').addEventListener('click', close);
+
+  function unit() {
+    var p = m[1];
+    groups.forEach(function (g) { (sel[g.id] || []).forEach(function (i) { p += g.choices[i].price; }); });
+    return p;
+  }
+  function valid() { return groups.every(function (g) { return !g.required || (sel[g.id] || []).length > 0; }); }
+  function group(g) {
+    var picked = sel[g.id] || [];
+    var h = '<div class="bx-opt-hd"><span class="bx-rc-name">' + g.title + '</span><span class="bx-chip-tag">' + (g.required ? 'Required' : 'Optional') + '</span></div>';
+    g.choices.forEach(function (c, i) {
+      var on = picked.indexOf(i) !== -1;
+      h += '<button type="button" class="bx-opt' + (on ? ' is-on' : '') + '" data-group="' + g.id + '" data-i="' + i + '" role="' + (g.multi ? 'checkbox' : 'radio') + '" aria-checked="' + on + '">' +
+        '<span class="bx-mark' + (g.multi ? ' is-box' : '') + '">' + (on ? icon('check', 'bx-ic-xs') : '') + '</span><span class="bx-grow bx-left">' + c.label + '</span><span class="bx-muted">' + optMoney(c.price) + '</span></button>';
+    });
+    return h;
+  }
+  function draw() {
+    var keep = scroller.scrollTop;
+    var h = '<div class="bx-item-head"><div class="bx-grow bx-left"><h3 class="bx-sheet-title">' + esc(m[0]) + '</h3><div class="bx-muted">Megh Kacchi House</div></div>' +
+      '<button type="button" class="bx-iconbtn" data-close="1" aria-label="Close">' + icon('x') + '</button></div><div class="bx-money bx-item-price">' + money(m[1]) + '</div>';
+    groups.filter(function (g) { return !g.required; }).forEach(function (g) { h += group(g); });
+    h += '<div class="bx-qtyrow"><span class="bx-rc-name">Quantity</span><div class="bx-stepper"><button type="button" data-qty="-1" aria-label="Less">' + icon('minus') +
+      '</button><span class="bx-stepper-n">' + qty + '</span><button type="button" data-qty="1" aria-label="More">' + icon('plus') + '</button></div></div>';
+    groups.filter(function (g) { return g.required; }).forEach(function (g) { h += group(g); });
+    scroller.innerHTML = h;
+    scroller.scrollTop = keep;
+    foot.innerHTML = '<button type="button" class="bx-btn bx-btn-primary bx-btn-block bx-btn-lg" data-confirm="1">Add to basket &middot; ' + money(unit() * qty) + '</button>';
+  }
+  wrap.addEventListener('click', function (e) {
+    var t;
+    if ((t = e.target.closest('[data-close]'))) { close(); return; }
+    if ((t = e.target.closest('[data-qty]'))) { qty = Math.max(1, qty + Number(t.getAttribute('data-qty'))); draw(); return; }
+    if ((t = e.target.closest('[data-group]'))) {
+      var gid = t.getAttribute('data-group'), i = Number(t.getAttribute('data-i'));
+      var g = groups.filter(function (x) { return x.id === gid; })[0], picked = sel[gid] || [];
+      if (g.multi) { sel[gid] = picked.indexOf(i) !== -1 ? picked.filter(function (x) { return x !== i; }) : picked.concat([i]); }
+      else { sel[gid] = [i]; }
+      draw(); return;
+    }
+    if ((t = e.target.closest('[data-confirm]'))) {
+      if (!valid()) { return; }
+      var labels = [];
+      groups.forEach(function (g) { (sel[g.id] || []).forEach(function (i) { labels.push(g.choices[i].label); }); });
+      basket.push({ name: m[0], opts: labels, qty: qty, unit: unit() });
+      close(); paintBar(); toast('Added to basket');
+    }
+  });
+  draw();
+}
+
+document.addEventListener('click', function (e) {
+  var add = e.target.closest('[data-add]');
+  if (add) { openItem(MENU[Number(add.getAttribute('data-add'))]); return; }
+  if (e.target.closest('[data-basket]')) { toast('Opens the basket screen'); return; }
+  var go = e.target.closest('[data-go]');
+  if (go) { toast(go.getAttribute('data-go') === 'Share' ? 'Opens the share options' : 'Goes back to the previous screen'); }
+});
+paintMenu();
+</script>
+</body>
+</html>

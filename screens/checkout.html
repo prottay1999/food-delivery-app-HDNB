@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoodApp checkout screens</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --fd-primary: #0E7A6E;
+  --fd-primary-dark: #0A5F56;
+  --fd-ink: #1A1D23;
+  --fd-grey: #5F6570;
+  --fd-grey-light: #9AA0AA;
+  --fd-hair: #E4E6EA;
+  --fd-bg: #F7F8F9;
+  --fd-white: #FFFFFF;
+  --fd-radius: 10px;
+  --fd-radius-sm: 6px;
+  --fd-status-placed: #B45309;
+  --fd-status-accepted: #0E7A6E;
+  --fd-status-transit: #1D4ED8;
+  --fd-status-delivered: #15803D;
+  --fd-status-cancelled: #B91C1C;
+  --fd-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Bengali", "Nirmala UI", sans-serif;
+  --fd-font-bn: "Noto Sans Bengali", "Nirmala UI", sans-serif;
+  --fd-shadow-card: 0 1px 2px rgba(26, 29, 35, .04);
+  --fd-shadow-pop: 0 8px 28px rgba(26, 29, 35, .12);
+  --fd-t: 160ms;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--fd-font);
+  color: var(--fd-ink);
+  background: var(--fd-bg);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--fd-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.fd-phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  flex: none;
+  background: var(--fd-white);
+  border: 10px solid #12151B;
+  border-radius: 44px;
+  box-shadow: var(--fd-shadow-pop);
+  overflow: hidden;
+  transform-origin: center center;
+}
+@media (max-height: 900px) {
+.fd-phone { transform: scale(.92); }
+}
+@media (max-height: 820px) {
+.fd-phone { transform: scale(.86); }
+}
+@media (max-height: 760px) {
+.fd-phone { transform: scale(.80); }
+}
+@media (max-height: 700px) {
+.fd-phone { transform: scale(.74); }
+}
+.fd-phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 26px;
+  background: #12151B;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  z-index: 5;
+}
+.bx-stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+  background: var(--fd-bg);
+}
+:root { --bx-scale: 1; }
+@media (max-height: 900px) {
+:root { --bx-scale: 0.95; }
+}
+@media (max-height: 840px) {
+:root { --bx-scale: 0.88; }
+}
+@media (max-height: 780px) {
+:root { --bx-scale: 0.84; }
+}
+@media (max-height: 720px) {
+:root { --bx-scale: 0.76; }
+}
+.bx-fit {
+  width: calc(390px * var(--bx-scale));
+  height: calc(844px * var(--bx-scale));
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bx-fit > .fd-phone { transform: scale(var(--bx-scale)); transform-origin: center center; position: relative; }
+.bx-app {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--fd-white);
+  font-family: var(--fd-font);
+  color: var(--fd-ink);
+}
+.bx-status {
+  flex: none;
+  height: 34px;
+  padding: 8px 26px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--fd-white);
+}
+.bx-sysicons { width: 38px; height: 12px; fill: currentColor; }
+.bx-status-icons .bx-ic { display: none; }
+.bx-view { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
+.bx-screen, .bx-col { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.bx-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+.bx-grow { flex: 1 1 auto; min-width: 0; }
+.bx-left { text-align: left; }
+.bx-spacer { height: 24px; flex: none; }
+.bx-muted { color: var(--fd-grey); font-size: 13px; }
+.bx-pad { padding: 12px 16px; }
+.bx-money { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
+.bx-h3 { margin: 0 0 8px; font-size: 14px; }
+.bx-ic { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.bx-hd {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 8px 12px;
+  background: var(--fd-white);
+  border-bottom: 1px solid var(--fd-hair);
+}
+.bx-hd-title { font-size: 16px; font-weight: 700; }
+.bx-iconbtn {
+  position: relative;
+  flex: none;
+  width: 38px; height: 38px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--fd-white);
+  color: var(--fd-ink);
+  border: 1px solid var(--fd-hair);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.bx-iconbtn:hover { border-color: var(--fd-grey-light); }
+.bx-btn:focus-visible, .bx-iconbtn:focus-visible { outline: 2px solid var(--fd-primary); outline-offset: 2px; }
+.bx-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 16px;
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  color: var(--fd-ink);
+  background: var(--fd-white);
+  border: 1px solid var(--fd-hair);
+  border-radius: var(--fd-radius-sm);
+  cursor: pointer;
+}
+.bx-btn:hover { border-color: var(--fd-grey-light); }
+.bx-btn:disabled { opacity: .5; cursor: not-allowed; }
+.bx-btn-primary { color: var(--fd-white); background: var(--fd-primary); border-color: var(--fd-primary); }
+.bx-btn-primary:hover { background: var(--fd-primary-dark); border-color: var(--fd-primary-dark); }
+.bx-btn-block { display: flex; width: 100%; }
+.bx-btn-lg { height: 52px; font-size: 16px; }
+.bx-link { background: none; border: 0; padding: 4px 8px; font: inherit; font-weight: 600; color: var(--fd-primary); cursor: pointer; }
+.bx-link:disabled { color: var(--fd-grey-light); cursor: default; }
+.bx-input {
+  width: 100%; height: 44px; padding: 0 12px;
+  font-family: inherit; font-size: 15px; color: var(--fd-ink);
+  background: var(--fd-white);
+  border: 1px solid var(--fd-hair);
+  border-radius: var(--fd-radius-sm);
+}
+.bx-input:focus { outline: none; border-color: var(--fd-primary); box-shadow: 0 0 0 3px rgba(14, 122, 110, .12); }
+.bx-input::placeholder { color: var(--fd-grey-light); }
+select.bx-input { appearance: auto; }
+.bx-error { color: var(--fd-status-cancelled); font-size: 13px; min-height: 18px; margin: 6px 0; }
+.bx-ok { color: var(--fd-status-delivered); font-size: 13px; min-height: 18px; margin: 6px 0; }
+.bx-card { background: var(--fd-white); border: 1px solid var(--fd-hair); border-radius: var(--fd-radius); }
+.bx-rc-name { font-weight: 700; font-size: 14px; }
+.bx-layer { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+.bx-layer > * { pointer-events: auto; }
+.bx-mark { flex: none; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; border: 1.5px solid var(--fd-grey-light); border-radius: 999px; }
+.bx-mark.is-on { border-color: var(--fd-primary); background: var(--fd-primary); color: var(--fd-white); }
+.bx-mark.is-radio.is-on { box-shadow: inset 0 0 0 3px var(--fd-white); }
+.bx-toast {
+  position: absolute; left: 24px; right: 24px; bottom: 84px; padding: 12px 16px; text-align: center;
+  font-size: 13px; font-weight: 600; color: var(--fd-white); background: var(--fd-ink); border-radius: var(--fd-radius-sm); z-index: 60;
+}
+.bx-bill { display: flex; flex-direction: column; gap: 8px; }
+.bx-bill-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.bx-bill-row.is-total { padding-top: 10px; border-top: 1px solid var(--fd-hair); font-weight: 700; font-size: 16px; }
+.bx-foot { flex: none; padding: 10px 16px 14px; background: var(--fd-white); border-top: 1px solid var(--fd-hair); }
+.bx-addrcard { display: flex; align-items: center; gap: 12px; padding: 12px; }
+.bx-paylist { overflow: hidden; }
+.bx-pay { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; font: inherit; text-align: left; background: var(--fd-white); border: 0; border-bottom: 1px solid var(--fd-hair); cursor: pointer; }
+.bx-pay:last-child { border-bottom: 0; }
+.bx-promo-row { display: flex; gap: 8px; }
+.bx-promo-row .bx-btn { flex: none; }
+@media (max-width: 500px) {
+.bx-stage { padding: 0; min-height: 100vh; display: block; }
+.bx-fit { width: 100%; height: 100vh; height: 100dvh; display: block; }
+.bx-fit > .fd-phone {
+    width: 100%; height: 100%; border: 0; border-radius: 0; box-shadow: none; transform: none;
+  }
+.fd-phone-notch, .bx-status { display: none; }
+}
+.bx-btn-primary:disabled, .bx-btn-primary:disabled:hover { opacity: 1; color: var(--fd-grey-light); background: var(--fd-hair); border-color: var(--fd-hair); }
+.bx-strike { margin-right: 4px; font-weight: 400; color: var(--fd-grey); }
+</style>
+</head>
+<body>
+<!-- FoodApp checkout, four steps in one file. Open it in a browser. -->
+<main class="bx-stage">
+  <div class="bx-fit">
+    <div class="fd-phone">
+      <div class="fd-phone-notch" aria-hidden="true"></div>
+      <div class="bx-app">
+<div class="bx-status" aria-hidden="true"><span class="bx-status-time">13:10</span><span class="bx-status-icons"><svg viewBox="0 0 40 12" class="bx-sysicons"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><rect x="23" y="1" width="16" height="10" rx="2.5" fill="none" stroke="currentColor"/><rect x="25" y="3" width="10" height="6" rx="1"/></svg></span></div><div class="bx-view"><div class="bx-col bx-screen" id="screen"><div class="bx-hd"><button type="button" class="bx-iconbtn" id="back" aria-label="Back"><svg viewBox="0 0 24 24" class="bx-ic " aria-hidden="true"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></button><div class="bx-hd-title" id="title"></div><div class="bx-grow"></div></div><div class="bx-body" id="body"></div><div class="bx-foot" id="foot"></div></div></div>
+        <div class="bx-layer"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+var ICONS = {"pin":"<path d=\"M12 21s-6.5-5.7-6.5-11a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11-6.5 11z\"/><circle cx=\"12\" cy=\"10\" r=\"2.3\"/>","clock":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/>","cash":"<rect x=\"3\" y=\"7\" width=\"18\" height=\"10\" rx=\"1.5\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/><path d=\"M6.5 12h.01M17.5 12h.01\"/>","wallet":"<rect x=\"3\" y=\"6\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M3 10h18\"/><path d=\"M16 14.5h2\"/>","card":"<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"/><path d=\"M3 10h18\"/><path d=\"M7 15h4\"/>"};
+var layer = document.querySelector('.bx-layer');
+function toast(msg) {
+  var old = layer.querySelectorAll('.bx-toast');
+  for (var i = 0; i < old.length; i++) { old[i].remove(); }
+  var n = document.createElement('div');
+  n.className = 'bx-toast'; n.setAttribute('role', 'status'); n.textContent = msg;
+  layer.appendChild(n);
+  setTimeout(function () { n.remove(); }, 2400);
+}
+function money(n) {
+  var s = String(Math.round(n)), head = s.slice(0, -3), tail = s.slice(-3);
+  if (s.length > 3) { s = head.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + tail; }
+  return 'Tk ' + s;
+}
+function icon(name, cls) {
+  return '<svg viewBox="0 0 24 24" class="bx-ic ' + (cls || '') + '" aria-hidden="true">' + ICONS[name] + '</svg>';
+}
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+var STEPS = ['address', 'time', 'payment', 'review'];
+var TITLES = { address: 'Delivery address', time: 'Delivery time', payment: 'Payment', review: 'Review order' };
+var FREE_DELIVERY_MIN = 500, DELIVERY_FEE = 45;
+var lines = [
+  { name: 'Chicken Roast', opts: [], qty: 1, unit: 160 },
+  { name: 'Beef Tehari', opts: ['Full'], qty: 1, unit: 270 }
+];
+var PAY = [
+  ['cash', 'Cash on delivery', 'Pay when your food arrives', 'cash'],
+  ['bkash', 'bKash', 'Pay with your bKash account', 'wallet'],
+  ['nagad', 'Nagad', 'Pay with your Nagad account', 'wallet'],
+  ['card', 'Card', 'Visa or Mastercard', 'card']
+];
+var step = 0, method = 'cash', promo = '', promoMsg = '', promoOk = false;
+
+function subtotal() { var s = 0; lines.forEach(function (l) { s += l.unit * l.qty; }); return s; }
+
+function pricing() {
+  var sub = subtotal(), discount = 0;
+  var free = promoOk || sub - discount >= FREE_DELIVERY_MIN;
+  return { sub: sub, free: free, fee: free ? 0 : DELIVERY_FEE, total: sub - discount + (free ? 0 : DELIVERY_FEE) };
+}
+
+function applyPromo(code) {
+  code = code.trim().toUpperCase();
+  promo = code; promoOk = false; promoMsg = '';
+  if (!code) { return; }
+  if (code === 'FREEDEL500') {
+    if (subtotal() >= FREE_DELIVERY_MIN) { promoOk = true; promoMsg = code + ' applied'; }
+    else { promoMsg = 'Add ' + money(FREE_DELIVERY_MIN - subtotal()) + ' more to use this code.'; }
+  } else { promoMsg = 'This code is not valid.'; }
+}
+
+function paint() {
+  var s = STEPS[step], body = document.getElementById('body'), foot = document.getElementById('foot');
+  document.getElementById('title').textContent = TITLES[s];
+  document.getElementById('screen').setAttribute('data-step', s);
+  var h = '', label = 'Continue';
+  if (s === 'address') {
+    h = '<div class="bx-pad"><h3 class="bx-h3">Delivery address</h3><div class="bx-card bx-addrcard">' + icon('pin') +
+      '<div class="bx-grow bx-left"><div class="bx-rc-name">Home</div><div class="bx-muted">House 42, Road 9/A, Dhanmondi</div></div>' +
+      '<button type="button" class="bx-link" data-note="Opens the address list">Change</button></div></div>';
+  } else if (s === 'time') {
+    h = '<div class="bx-pad"><h3 class="bx-h3">Delivery time</h3><div class="bx-card bx-paylist"><div class="bx-pay is-on" role="radio" aria-checked="true">' + icon('clock') +
+      '<div class="bx-grow bx-left"><div class="bx-rc-name">Deliver now</div><div class="bx-muted">Your order is prepared as soon as the restaurant accepts it</div></div><span class="bx-mark is-radio is-on"></span></div></div></div>' +
+      '<div class="bx-pad"><h3 class="bx-h3">Delivery instructions</h3><input class="bx-input" placeholder="Note for the rider (optional)"></div>';
+  } else if (s === 'payment') {
+    h = '<div class="bx-pad"><h3 class="bx-h3">Pay with</h3><div class="bx-card bx-paylist">';
+    PAY.forEach(function (m) {
+      var on = method === m[0];
+      h += '<button type="button" class="bx-pay' + (on ? ' is-on' : '') + '" data-pay="' + m[0] + '" role="radio" aria-checked="' + on + '">' + icon(m[3]) +
+        '<div class="bx-grow bx-left"><div class="bx-rc-name">' + m[1] + '</div><div class="bx-muted">' + m[2] + '</div></div><span class="bx-mark is-radio' + (on ? ' is-on' : '') + '"></span></button>';
+    });
+    h += '</div></div>';
+  } else {
+    var p = pricing(), payName = PAY.filter(function (m) { return m[0] === method; })[0][1];
+    h = '<div class="bx-pad"><h3 class="bx-h3">Megh Kacchi House</h3><div class="bx-card bx-pad bx-bill">';
+    lines.forEach(function (l) {
+      h += '<div class="bx-bill-row"><span>' + l.qty + ' x ' + esc(l.name) + (l.opts.length ? ' (' + esc(l.opts.join(', ')) + ')' : '') + '</span><span class="bx-money">' + money(l.unit * l.qty) + '</span></div>';
+    });
+    h += '</div></div><div class="bx-pad"><div class="bx-card bx-pad bx-bill"><div class="bx-bill-row"><span>Deliver to</span><span class="bx-money">Home, Dhanmondi</span></div>' +
+      '<div class="bx-bill-row"><span>Payment</span><span class="bx-money">' + payName + '</span></div>' +
+      '<div class="bx-bill-row"><span>Estimated delivery</span><span class="bx-money">35 min</span></div></div></div>' +
+      '<div class="bx-pad"><h3 class="bx-h3">Promo code</h3><div class="bx-promo-row"><input class="bx-input" id="promo" placeholder="Promo code" value="' + esc(promo) + '" aria-label="Promo code">' +
+      '<button type="button" class="bx-btn" data-apply="1">Apply</button></div><div class="' + (promoOk || !promoMsg ? 'bx-ok' : 'bx-error') + '">' + esc(promoMsg) + '</div></div>' +
+      '<div class="bx-pad bx-bill"><h3 class="bx-h3">Order summary</h3><div class="bx-bill-row"><span>Subtotal</span><span class="bx-money">' + money(p.sub) + '</span></div>' +
+      '<div class="bx-bill-row"><span>Delivery fee</span><span class="bx-money">' + (p.free ? '<s class="bx-strike">' + money(DELIVERY_FEE) + '</s> Free' : money(p.fee)) + '</span></div>' +
+      '<div class="bx-bill-row is-total"><span>Total</span><span class="bx-money">' + money(p.total) + '</span></div></div>';
+    label = 'Place order &middot; ' + money(p.total);
+  }
+  body.innerHTML = h + '<div class="bx-spacer"></div>';
+  foot.innerHTML = '<button type="button" class="bx-btn bx-btn-primary bx-btn-block bx-btn-lg" data-next="1">' + label + '</button>';
+  body.scrollTop = 0;
+}
+
+document.addEventListener('click', function (e) {
+  var t;
+  if ((t = e.target.closest('[data-pay]'))) { method = t.getAttribute('data-pay'); paint(); return; }
+  if (e.target.closest('[data-apply]')) { applyPromo(document.getElementById('promo').value); paint(); return; }
+  if ((t = e.target.closest('[data-note]'))) { toast(t.getAttribute('data-note')); return; }
+  if (e.target.closest('[data-next]')) {
+    if (step < STEPS.length - 1) { step += 1; paint(); } else { toast('Order placed'); }
+    return;
+  }
+  if (e.target.closest('#back')) {
+    if (step > 0) { step -= 1; paint(); } else { toast('Goes back to the basket'); }
+  }
+});
+paint();
+</script>
+</body>
+</html>
